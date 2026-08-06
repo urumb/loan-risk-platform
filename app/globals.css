@@ -1,0 +1,43 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: light;
+  background: #f7f4ed;
+  color: #142033;
+}
+
+body {
+  margin: 0;
+  background:
+    linear-gradient(rgba(11, 31, 51, 0.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(11, 31, 51, 0.035) 1px, transparent 1px),
+    #f7f4ed;
+  background-size: 28px 28px;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+
+.ledger-card {
+  border: 1px solid #d8d0c1;
+  background: rgba(255, 252, 246, 0.86);
+  box-shadow: 0 16px 32px rgba(11, 31, 51, 0.06);
+}
+
+.risk-low {
+  color: #2f7d52;
+}
+
+.risk-medium {
+  color: #b87820;
+}
+
+.risk-high {
+  color: #a13d32;
+}
