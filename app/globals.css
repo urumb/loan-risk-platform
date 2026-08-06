@@ -1,20 +1,33 @@
+﻿@import url("https://fonts.googleapis.com/css2?family=Familjen+Grotesk:wght@500;600;700&family=IBM+Plex+Mono:wght@500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap");
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 :root {
   color-scheme: light;
-  background: #f7f4ed;
-  color: #142033;
+  background: #a8f0df;
+  color: #111111;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
 }
 
 body {
   margin: 0;
+  min-height: 100vh;
   background:
-    linear-gradient(rgba(11, 31, 51, 0.035) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(11, 31, 51, 0.035) 1px, transparent 1px),
-    #f7f4ed;
-  background-size: 28px 28px;
+    radial-gradient(circle at 14% 12%, rgba(255, 216, 77, 0.42) 0 11rem, transparent 11.2rem),
+    linear-gradient(rgba(17, 17, 17, 0.045) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(17, 17, 17, 0.045) 1px, transparent 1px),
+    #a8f0df;
+  background-size: auto, 32px 32px, 32px 32px, auto;
+  color: #111111;
 }
 
 button,
@@ -24,20 +37,142 @@ textarea {
   font: inherit;
 }
 
+button,
+a,
+input,
+select,
+textarea {
+  outline-offset: 4px;
+}
+
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: 3px solid #ffd84d;
+  outline-offset: 3px;
+}
+
 .ledger-card {
-  border: 1px solid #d8d0c1;
-  background: rgba(255, 252, 246, 0.86);
-  box-shadow: 0 16px 32px rgba(11, 31, 51, 0.06);
+  border: 2px solid #111111;
+  border-radius: 28px;
+  background: rgba(255, 255, 255, 0.94);
+  box-shadow: 8px 8px 0 rgba(17, 17, 17, 0.16);
+}
+
+.soft-card {
+  border: 2px solid rgba(17, 17, 17, 0.14);
+  border-radius: 22px;
+  background: rgba(255, 255, 255, 0.72);
+}
+
+.lift {
+  transition: transform 180ms ease, box-shadow 180ms ease, background 180ms ease;
+}
+
+.lift:hover {
+  transform: translateY(-3px);
+  box-shadow: 10px 12px 0 rgba(17, 17, 17, 0.18);
+}
+
+.btn-primary,
+.btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  border: 2px solid #111111;
+  border-radius: 999px;
+  padding: 0.78rem 1.15rem;
+  font-weight: 800;
+  transition: transform 160ms ease, box-shadow 160ms ease, background 160ms ease;
+}
+
+.btn-primary {
+  background: #111111;
+  color: white;
+}
+
+.btn-secondary {
+  background: #ffd84d;
+  color: #111111;
+}
+
+.btn-primary:hover,
+.btn-secondary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 0 rgba(17, 17, 17, 0.14);
+}
+
+.field {
+  width: 100%;
+  border: 2px solid #111111;
+  border-radius: 16px;
+  background: white;
+  padding: 0.82rem 0.95rem;
+  color: #111111;
+  box-shadow: inset 0 -2px 0 rgba(17, 17, 17, 0.08);
+}
+
+.eyebrow {
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.animate-rise {
+  animation: rise 420ms ease both;
+}
+
+.animate-pulse-soft {
+  animation: pulse-soft 1.4s ease-in-out infinite;
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(14px) scale(0.99);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes pulse-soft {
+  0%,
+  100% {
+    opacity: 0.62;
+    transform: scaleX(0.96);
+  }
+  50% {
+    opacity: 1;
+    transform: scaleX(1);
+  }
 }
 
 .risk-low {
-  color: #2f7d52;
+  color: #43a047;
 }
 
 .risk-medium {
-  color: #b87820;
+  color: #f9a825;
 }
 
 .risk-high {
-  color: #a13d32;
+  color: #e53935;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.001ms !important;
+  }
 }

@@ -1,4 +1,4 @@
-import type { Config } from "tailwindcss";
+﻿import type { Config } from "tailwindcss";
 
 const config: Config = {
   content: ["./app/**/*.{js,ts,jsx,tsx}", "./components/**/*.{js,ts,jsx,tsx}", "./lib/**/*.{js,ts,jsx,tsx}"],
@@ -6,19 +6,23 @@ const config: Config = {
     extend: {
       colors: {
         ledger: {
-          navy: "#0b1f33",
-          ink: "#142033",
-          paper: "#f7f4ed",
-          line: "#d8d0c1",
-          green: "#2f7d52",
-          amber: "#b87820",
-          brick: "#a13d32"
+          mint: "#A8F0DF",
+          ink: "#111111",
+          paper: "#ffffff",
+          line: "#111111",
+          soft: "#effbf7",
+          yellow: "#FFD84D",
+          green: "#43A047",
+          amber: "#F9A825",
+          brick: "#E53935",
+          blue: "#3F7CFF",
+          lilac: "#C7B7FF"
         }
       },
       fontFamily: {
-        sans: ["IBM Plex Sans", "Inter", "system-ui", "sans-serif"],
+        sans: ["Plus Jakarta Sans", "Inter", "system-ui", "sans-serif"],
         mono: ["IBM Plex Mono", "SFMono-Regular", "monospace"],
-        display: ["Fraunces", "Georgia", "serif"]
+        display: ["Familjen Grotesk", "Arial", "sans-serif"]
       }
     }
   },
