@@ -222,4 +222,4 @@ See `DEPLOY.md` for the concise deployment checklist.
 
 ## Author
 
-CrediShield was built by Noel J as a production-quality AI/ML fintech portfolio project for college evaluation, hackathons, and recruiter review.
+CrediShield was built by me as a production-quality AI/ML fintech portfolio project for college evaluation, hackathons, and recruiter review.
