@@ -16,13 +16,13 @@ export function Nav() {
   return (
     <header className="sticky top-0 z-40 border-b-2 border-ledger-line bg-white/88 backdrop-blur-xl">
       <div className="mx-auto flex max-w-7xl flex-col gap-4 px-4 py-4 sm:px-6 md:flex-row md:items-center md:justify-between lg:px-8">
-        <Link href="/" className="group flex items-center gap-3" aria-label="LedgerLens portfolio dashboard">
+        <Link href="/" className="group flex items-center gap-3" aria-label="CrediShield portfolio dashboard">
           <span className="grid h-12 w-12 place-items-center rounded-2xl border-2 border-ledger-line bg-ledger-yellow font-display text-2xl font-bold shadow-[4px_4px_0_rgba(17,17,17,0.18)] transition group-hover:-translate-y-0.5">
-            L
+            C
           </span>
           <span>
-            <span className="eyebrow block text-ledger-ink/60">AI Credit Desk</span>
-            <span className="block font-display text-3xl font-bold leading-none">LedgerLens</span>
+            <span className="eyebrow block text-ledger-ink/60">Credit Intelligence</span>
+            <span className="block font-display text-3xl font-bold leading-none">CrediShield</span>
           </span>
         </Link>
         <nav className="flex flex-wrap gap-2" aria-label="Primary navigation">

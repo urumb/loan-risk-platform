@@ -1,7 +1,7 @@
-﻿# LedgerLens: AI Credit Intelligence Platform
+﻿# CrediShield: AI-Powered Bank Loan Default Risk & Credit Intelligence Platform
 
 <p align="center">
-  <strong>Production-style fintech workspace for default-risk scoring, portfolio monitoring, AI explanations, applicant review, CSV ingest, and decision audit trails.</strong>
+  <strong>AI-Powered Bank Loan Default Risk & Credit Intelligence Platform for portfolio monitoring, AI explanations, applicant review, CSV ingest, and decision audit trails.</strong>
 </p>
 
 <p align="center">
@@ -15,13 +15,13 @@
 
 ## Overview
 
-LedgerLens is a full-stack credit-risk operations desk built with the Next.js App Router. It ingests applicant profiles, computes and stores default-risk scores, ranks borrowers for officer review, visualizes portfolio exposure, generates cached Groq-powered credit explanations, and preserves every approval workflow action in an auditable decision log.
+CrediShield is a full-stack bank loan default risk and credit intelligence platform built with the Next.js App Router. It ingests applicant profiles, computes and stores default-risk scores, ranks borrowers for officer review, visualizes portfolio exposure, generates cached Groq-powered credit explanations, and preserves every approval workflow action in an auditable decision log.
 
 The project is designed for portfolio review, AI/ML evaluation, hackathon judging, and recruiter screening. The backend focuses on deterministic risk scoring and durable storage; the frontend presents the workflow like a polished fintech product.
 
 ## Screenshots
 
-> Add deployed screenshots after Vercel deployment.
+> Add CrediShield screenshots after Vercel deployment.
 
 | Portfolio Dashboard | Applicant Queue | Credit Profile |
 | --- | --- | --- |
@@ -36,7 +36,7 @@ The project is designed for portfolio review, AI/ML evaluation, hackathon judgin
 - Portfolio dashboard with KPI cards, risk alerting, exposure analytics, recent decisions, and default-rate heatmap.
 - Applicant queue with risk-tier filtering, branch/category filters, sorting, search, status pills, and score progress indicators.
 - CRM-style applicant profile with financial summary, DTI, stored risk score, decision workflow, AI memo, and timeline.
-- Groq-powered AI Credit Intelligence with cached explanations per applicant.
+- Groq-powered AI credit explanations with cached intelligence per applicant.
 - CSV import workflow with client-side schema validation, preview, and server-side scoring on insert.
 - Decision log with officer, status, date filters, local search, and activity-feed presentation.
 - Prisma-backed Neon PostgreSQL persistence with migrations and seed data.
@@ -46,7 +46,7 @@ The project is designed for portfolio review, AI/ML evaluation, hackathon judgin
 
 ```mermaid
 flowchart LR
-  User["Credit Officer"] --> Browser["Next.js Client UI"]
+  User["Credit Officer"] --> Browser["CrediShield Next.js Client UI"]
   Browser --> Pages["App Router Pages"]
   Pages --> API["Route Handlers"]
   API --> Risk["Risk Scoring Module"]
@@ -177,7 +177,7 @@ prisma/
 | Variable | Required | Description |
 | --- | --- | --- |
 | `DATABASE_URL` | Yes | Neon pooled PostgreSQL connection string. |
-| `GROQ_API_KEY` | Yes for AI | Groq API key used by AI Credit Intelligence. |
+| `GROQ_API_KEY` | Yes for AI | Groq API key used by CrediShield AI credit explanations. |
 | `HIGH_RISK_THRESHOLD_PERCENT` | No | Dashboard alert threshold. Defaults to `20`. |
 
 ## Local Setup
@@ -222,4 +222,4 @@ See `DEPLOY.md` for the concise deployment checklist.
 
 ## Author
 
-Built by Noel J as a production-quality AI/ML fintech portfolio project for college evaluation, hackathons, and recruiter review.
+CrediShield was built by Noel J as a production-quality AI/ML fintech portfolio project for college evaluation, hackathons, and recruiter review.

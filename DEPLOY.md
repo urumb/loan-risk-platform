@@ -1,4 +1,6 @@
-# Deploying to Vercel
+# Deploying CrediShield to Vercel
+
+CrediShield is an AI-powered bank loan default risk and credit intelligence platform. Use this checklist for production deployment.
 
 ## Vercel CLI
 

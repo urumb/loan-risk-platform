@@ -62,9 +62,12 @@ export default function DashboardPage() {
             <span className="rounded-full border-2 border-ledger-line bg-white px-4 py-2 font-mono text-xs font-bold uppercase">Groq-ready</span>
           </div>
           <h1 className="max-w-4xl font-display text-5xl font-bold leading-[0.92] sm:text-7xl lg:text-8xl">
-            Credit risk, scored before it slows the desk.
+            CrediShield
           </h1>
           <p className="mt-6 max-w-2xl text-lg font-semibold leading-8 text-ledger-ink/72">
+            AI-Powered Bank Loan Default Risk & Credit Intelligence Platform
+          </p>
+          <p className="mt-4 max-w-2xl text-base font-semibold leading-7 text-ledger-ink/68">
             Monitor exposure, prioritize applicant reviews, explain risk with AI, and keep every officer decision auditable from one focused workspace.
           </p>
           <div className="mt-8 flex flex-wrap gap-3">

@@ -1,4 +1,4 @@
-﻿export function LoadingState({ label = "Loading ledger records" }: { label?: string }) {
+﻿export function LoadingState({ label = "Loading credit records" }: { label?: string }) {
   return (
     <div className="ledger-card p-6" role="status" aria-live="polite">
       <div className="mb-4 flex items-center justify-between gap-4">

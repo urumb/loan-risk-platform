@@ -3,8 +3,8 @@ import "./globals.css";
 import { Nav } from "@/components/Nav";
 
 export const metadata: Metadata = {
-  title: "LedgerLens | AI Credit Intelligence",
-  description: "Production-grade credit risk workspace for portfolio exposure, applicant review, and AI decision support."
+  title: "CrediShield",
+  description: "AI-powered platform for intelligent bank loan default risk assessment, portfolio analytics, AI credit explanations, and credit decision management."
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
