@@ -10,7 +10,7 @@ import { categories } from "@/lib/types";
 type Summary = {
   kpis: { totalApplicants: number; highRiskPercent: number; avgScore: number; totalExposure: number };
   exposure: Array<{ category: string; Low: number; Medium: number; High: number }>;
-  alert: { active: boolean; message: string };
+  alert: { status: "within" | "approaching" | "exceeding"; threshold: number; active: boolean; message: string };
 };
 
 type Rate = { id: string; branch: string; category: string; rate: number };
@@ -57,46 +57,57 @@ export default function DashboardPage() {
     <div className="space-y-8">
       <section className="grid gap-6 lg:grid-cols-[1.25fr_0.75fr]">
         <div className="ledger-card animate-rise overflow-hidden p-7 sm:p-9">
-          <div className="mb-8 flex flex-wrap items-center gap-3">
-            <span className="rounded-full border-2 border-ledger-line bg-ledger-yellow px-4 py-2 font-mono text-xs font-bold uppercase">Live portfolio</span>
-            <span className="rounded-full border-2 border-ledger-line bg-white px-4 py-2 font-mono text-xs font-bold uppercase">Groq-ready</span>
+          <div className="mb-6 flex flex-wrap items-center gap-2.5">
+            <span className="rounded-full border-2 border-ledger-line bg-ledger-yellow px-3.5 py-1.5 font-mono text-xs font-bold uppercase">Live portfolio</span>
+            <span className="rounded-full border-2 border-ledger-line bg-white px-3.5 py-1.5 font-mono text-xs font-bold uppercase">Groq AI Enabled</span>
+            <span className="rounded-full border-2 border-ledger-line bg-ledger-soft px-3.5 py-1.5 font-mono text-xs font-bold uppercase">Deterministic Scoring</span>
           </div>
           <h1 className="max-w-4xl font-display text-5xl font-bold leading-[0.92] sm:text-7xl lg:text-8xl">
             CrediShield
           </h1>
-          <p className="mt-6 max-w-2xl text-lg font-semibold leading-8 text-ledger-ink/72">
+          <p className="mt-5 max-w-2xl text-xl font-bold leading-8 text-ledger-ink/85">
             AI-Powered Bank Loan Default Risk & Credit Intelligence Platform
           </p>
-          <p className="mt-4 max-w-2xl text-base font-semibold leading-7 text-ledger-ink/68">
-            Monitor exposure, prioritize applicant reviews, explain risk with AI, and keep every officer decision auditable from one focused workspace.
-          </p>
-          <div className="mt-8 flex flex-wrap gap-3">
-            <Link href="/queue" className="btn-primary">Review queue</Link>
-            <Link href="/import" className="btn-secondary">Import applicants</Link>
+          <div className="mt-5 grid gap-2.5 sm:grid-cols-2">
+            <HeroPill title="Portfolio Monitoring" desc="Real-time exposure tracking across branches & loan categories." />
+            <HeroPill title="Applicant Prioritization" desc="Queue ranking based on formulaic default probability." />
+            <HeroPill title="Deterministic Scoring" desc="Strict server-side DTI and repayment history formula." />
+            <HeroPill title="AI Credit Memos" desc="Cached Groq decision-support explanations." />
+          </div>
+          <div className="mt-8 flex flex-wrap items-center gap-3">
+            <Link href="/queue" className="btn-primary">Review Queue</Link>
+            <Link href="/import" className="btn-secondary">Import Applicants</Link>
           </div>
         </div>
 
-        <aside className={`ledger-card animate-rise p-6 ${summary.alert.active ? "bg-red-50" : "bg-green-50"}`} style={{ animationDelay: "80ms" }}>
-          <p className="eyebrow text-ledger-ink/60">Risk Alert</p>
-          <h2 className="mt-3 font-display text-4xl font-bold leading-none">{summary.alert.active ? "Action needed" : "Within guardrails"}</h2>
+        <aside className={`ledger-card animate-rise p-6 ${summary.alert.status === "exceeding" ? "bg-red-50" : summary.alert.status === "approaching" ? "bg-amber-50" : "bg-green-50"}`} style={{ animationDelay: "80ms" }}>
+          <div className="flex items-center justify-between gap-2">
+            <p className="eyebrow text-ledger-ink/60">Risk Alert System</p>
+            <span className={`rounded-full border-2 border-ledger-line px-3 py-0.5 font-mono text-xs font-bold uppercase ${summary.alert.status === "exceeding" ? "bg-ledger-brick text-white" : summary.alert.status === "approaching" ? "bg-ledger-yellow text-ledger-ink" : "bg-ledger-green text-white"}`}>
+              {summary.alert.status === "exceeding" ? "Exceeding" : summary.alert.status === "approaching" ? "Approaching" : "Within Guardrails"}
+            </span>
+          </div>
+          <h2 className="mt-3 font-display text-4xl font-bold leading-none">
+            {summary.alert.status === "exceeding" ? "Action required" : summary.alert.status === "approaching" ? "Monitor exposure" : "Optimal risk mix"}
+          </h2>
           <p className="mt-4 text-base font-semibold leading-7 text-ledger-ink/75">{summary.alert.message}</p>
           <div className="mt-8 rounded-[22px] border-2 border-ledger-line bg-white p-4">
             <div className="mb-2 flex justify-between font-mono text-xs font-bold uppercase">
-              <span>High risk mix</span>
-              <span>{summary.kpis.highRiskPercent}%</span>
+              <span>High risk concentration</span>
+              <span>{summary.kpis.highRiskPercent}% / {summary.alert.threshold}% max</span>
             </div>
             <div className="h-4 overflow-hidden rounded-full border-2 border-ledger-line bg-ledger-soft">
-              <div className="h-full rounded-r-full bg-ledger-brick transition-all duration-700" style={{ width: `${Math.min(100, summary.kpis.highRiskPercent)}%` }} />
+              <div className={`h-full rounded-r-full transition-all duration-700 ${summary.alert.status === "exceeding" ? "bg-ledger-brick" : summary.alert.status === "approaching" ? "bg-ledger-yellow" : "bg-ledger-green"}`} style={{ width: `${Math.min(100, summary.kpis.highRiskPercent)}%` }} />
             </div>
           </div>
         </aside>
       </section>
 
       <section className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <Kpi label="Applicants" value={summary.kpis.totalApplicants.toLocaleString("en-IN")} tone="bg-white" />
-        <Kpi label="High Risk" value={`${summary.kpis.highRiskPercent}%`} tone="bg-red-50" />
-        <Kpi label="Avg Score" value={summary.kpis.avgScore.toFixed(1)} tone="bg-ledger-yellow" />
-        <Kpi label="Exposure" value={`INR ${currency.format(summary.kpis.totalExposure)}`} tone="bg-white" />
+        <Kpi label="Total Applicants" value={summary.kpis.totalApplicants.toLocaleString("en-IN")} subtext="Active underwriting queue" tone="bg-white" />
+        <Kpi label="High Risk %" value={`${summary.kpis.highRiskPercent}%`} subtext={`Target threshold: ${summary.alert.threshold}%`} tone="bg-red-50" />
+        <Kpi label="Average Risk Score" value={summary.kpis.avgScore.toFixed(1)} subtext="Scale: 0 (Low) to 100 (High)" tone="bg-ledger-yellow" />
+        <Kpi label="Total Loan Exposure" value={`INR ${currency.format(summary.kpis.totalExposure)}`} subtext="Combined portfolio principal" tone="bg-white" />
       </section>
 
       <section className="grid gap-6 lg:grid-cols-[1fr_0.42fr]">
@@ -151,11 +162,21 @@ export default function DashboardPage() {
   );
 }
 
-function Kpi({ label, value, tone }: { label: string; value: string; tone: string }) {
+function HeroPill({ title, desc }: { title: string; desc: string }) {
+  return (
+    <div className="rounded-2xl border-2 border-ledger-line bg-white/90 p-3 shadow-sm">
+      <p className="font-mono text-xs font-bold uppercase text-ledger-ink">{title}</p>
+      <p className="mt-1 text-xs font-semibold text-ledger-ink/70 leading-snug">{desc}</p>
+    </div>
+  );
+}
+
+function Kpi({ label, value, subtext, tone }: { label: string; value: string; subtext?: string; tone: string }) {
   return (
     <div className={`ledger-card lift animate-rise p-5 ${tone}`}>
       <p className="eyebrow text-ledger-ink/55">{label}</p>
-      <p className="mt-4 break-words font-display text-4xl font-bold leading-none sm:text-5xl">{value}</p>
+      <p className="mt-3 break-words font-display text-4xl font-bold leading-none sm:text-5xl">{value}</p>
+      {subtext ? <p className="mt-3 font-mono text-xs font-semibold text-ledger-ink/60">{subtext}</p> : null}
     </div>
   );
 }

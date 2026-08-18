@@ -9,10 +9,20 @@ const statuses = ["Approved", "Rejected", "Under_Investigation"];
 
 export async function POST(request: Request, { params }: { params: { id: string } }) {
   try {
-    const body = await request.json();
-    const status = normalizeStatus(String(body.status));
+    if (!params.id || typeof params.id !== "string") {
+      return jsonError("Applicant ID is required", 400);
+    }
+
+    let body: Record<string, unknown>;
+    try {
+      body = await request.json();
+    } catch {
+      return jsonError("Invalid JSON body payload.", 400);
+    }
+
+    const status = normalizeStatus(String(body.status ?? ""));
     if (!statuses.includes(status)) {
-      return jsonError("Invalid status", 400);
+      return jsonError("Invalid status value", 400);
     }
     if (!String(body.officerName ?? "").trim() || !String(body.comment ?? "").trim()) {
       return jsonError("Officer name and comment are required", 400);

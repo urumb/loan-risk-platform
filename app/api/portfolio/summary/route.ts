@@ -21,6 +21,18 @@ export async function GET() {
     const avgScore = totalApplicants ? applicants.reduce((sum, applicant) => sum + applicant.riskScore, 0) / totalApplicants : 0;
     const totalExposure = applicants.reduce((sum, applicant) => sum + applicant.loanAmount, 0);
     const threshold = Number(process.env.HIGH_RISK_THRESHOLD_PERCENT ?? 20);
+    const roundedHighRiskPercent = Number(highRiskPercent.toFixed(1));
+
+    let alertStatus: "within" | "approaching" | "exceeding" = "within";
+    let message = `High-risk concentration is healthy at ${roundedHighRiskPercent}% (threshold: ${threshold}%).`;
+
+    if (roundedHighRiskPercent > threshold) {
+      alertStatus = "exceeding";
+      message = `High-risk concentration is ${roundedHighRiskPercent}%, exceeding the ${threshold}% operational threshold.`;
+    } else if (roundedHighRiskPercent >= Math.max(0, threshold - 5)) {
+      alertStatus = "approaching";
+      message = `High-risk concentration is ${roundedHighRiskPercent}%, approaching the ${threshold}% limit.`;
+    }
 
     const exposure = categories.map((category) => {
       const row: Record<string, number | string> = { category, Low: 0, Medium: 0, High: 0 };
@@ -34,15 +46,16 @@ export async function GET() {
     return NextResponse.json({
       kpis: {
         totalApplicants,
-        highRiskPercent: Number(highRiskPercent.toFixed(1)),
+        highRiskPercent: roundedHighRiskPercent,
         avgScore: Number(avgScore.toFixed(1)),
         totalExposure
       },
       exposure,
       alert: {
         threshold,
-        active: highRiskPercent > threshold,
-        message: `High-risk concentration is ${highRiskPercent.toFixed(1)}% against a ${threshold}% threshold.`
+        status: alertStatus,
+        active: alertStatus !== "within",
+        message
       }
     });
   } catch (error) {

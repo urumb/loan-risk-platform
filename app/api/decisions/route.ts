@@ -17,14 +17,30 @@ export async function GET(request: NextRequest) {
     if (normalizedStatus && !statuses.includes(normalizedStatus)) {
       return jsonError("Invalid status filter.", 400);
     }
+
+    let fromDate: Date | undefined;
+    let toDate: Date | undefined;
+    if (from) {
+      fromDate = new Date(from);
+      if (Number.isNaN(fromDate.getTime())) {
+        return jsonError("Invalid 'from' date format.", 400);
+      }
+    }
+    if (to) {
+      toDate = new Date(`${to}T23:59:59`);
+      if (Number.isNaN(toDate.getTime())) {
+        return jsonError("Invalid 'to' date format.", 400);
+      }
+    }
+
     const where = {
       ...(params.get("officer") ? { officerName: { contains: params.get("officer")!, mode: "insensitive" as const } } : {}),
       ...(normalizedStatus ? { status: normalizedStatus as "Approved" | "Rejected" | "Under_Investigation" } : {}),
-      ...(from || to
+      ...(fromDate || toDate
         ? {
             createdAt: {
-              ...(from ? { gte: new Date(from) } : {}),
-              ...(to ? { lte: new Date(`${to}T23:59:59`) } : {})
+              ...(fromDate ? { gte: fromDate } : {}),
+              ...(toDate ? { lte: toDate } : {})
             }
           }
         : {})

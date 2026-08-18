@@ -19,18 +19,25 @@ export async function POST(_: Request, { params }: { params: { id: string } }) {
       return jsonError("GROQ_API_KEY is not configured.", 503);
     }
 
-    const prompt = `Explain this bank loan default risk in plain language for a credit officer.
-Applicant branch: ${applicant.branch}
-Loan category: ${applicant.category}
-Annual income: ${applicant.annualIncome}
-Existing monthly debt: ${applicant.existingMonthlyDebt}
-Debt-to-income ratio: ${(applicant.dti * 100).toFixed(1)}%
-Repayment score: ${applicant.repaymentScore}/100
-Loan amount: ${applicant.loanAmount}
-Tenure months: ${applicant.tenureMonths}
-Stored risk score: ${applicant.riskScore}/100
-Risk tier: ${applicant.riskTier}
-Use 4 concise sentences and mention the main drivers.`;
+    const systemPrompt = `You are an executive credit analyst at CrediShield. Your task is to provide a concise, structured credit memo explaining the default risk for a credit officer.
+Rules:
+- Rely strictly and exclusively on the provided financial metrics. Do not assume or invent unstated background facts, employment details, or external collateral.
+- The default risk score was calculated deterministically by server formula (55% DTI weight + 45% repayment gap weight). Your explanation is a decision-support interpretation, NOT the scoring engine itself.
+- Structure your response into exactly 3 bullet points:
+  * Key Risk Drivers: Direct evaluation of DTI (${(applicant.dti * 100).toFixed(1)}%) and Repayment Score (${applicant.repaymentScore}/100).
+  * Affordability & Exposure: Commentary on loan amount (INR ${applicant.loanAmount.toLocaleString("en-IN")}) vs annual income (INR ${applicant.annualIncome.toLocaleString("en-IN")}) across ${applicant.tenureMonths} months.
+  * Underwriting Recommendation: Clear credit officer guidance corresponding to the ${applicant.riskTier} risk tier (${applicant.riskScore.toFixed(1)}/100).`;
+
+    const userPrompt = `Applicant Profile:
+Branch: ${applicant.branch}
+Category: ${applicant.category}
+Annual Income: INR ${applicant.annualIncome.toLocaleString("en-IN")}
+Existing Monthly Debt: INR ${applicant.existingMonthlyDebt.toLocaleString("en-IN")}
+DTI Ratio: ${(applicant.dti * 100).toFixed(1)}%
+Repayment Score: ${applicant.repaymentScore}/100
+Requested Loan: INR ${applicant.loanAmount.toLocaleString("en-IN")}
+Tenure: ${applicant.tenureMonths} months
+Deterministic Risk Score: ${applicant.riskScore.toFixed(1)}/100 (${applicant.riskTier} Risk)`;
 
     const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
       method: "POST",
@@ -40,20 +47,28 @@ Use 4 concise sentences and mention the main drivers.`;
       },
       body: JSON.stringify({
         model: "llama-3.3-70b-versatile",
-        messages: [{ role: "user", content: prompt }],
-        max_tokens: 220
+        messages: [
+          { role: "system", content: systemPrompt },
+          { role: "user", content: userPrompt }
+        ],
+        temperature: 0.2,
+        max_tokens: 300
       })
     });
 
+    if (response.status === 429) {
+      return jsonError("AI credit intelligence rate limit reached. Please try again shortly.", 429);
+    }
+
     if (!response.ok) {
       const details = await response.text();
-      return jsonError("Groq explanation request failed.", 502, details.slice(0, 500));
+      return jsonError("AI credit explanation service is temporarily unavailable.", 502, details.slice(0, 300));
     }
 
     const payload = await response.json();
-    const text = payload?.choices?.[0]?.message?.content;
+    const text = payload?.choices?.[0]?.message?.content?.trim();
     if (!text) {
-      return jsonError("Groq returned an empty explanation.", 502);
+      return jsonError("AI credit explanation returned an empty response.", 502);
     }
     const explanation = await prisma.aiExplanation.create({ data: { applicantId: params.id, text } });
     return NextResponse.json(explanation, { status: 201 });

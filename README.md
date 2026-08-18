@@ -1,7 +1,7 @@
 ﻿# CrediShield: AI-Powered Bank Loan Default Risk & Credit Intelligence Platform
 
 <p align="center">
-  <strong>AI-Powered Bank Loan Default Risk & Credit Intelligence Platform for portfolio monitoring, AI explanations, applicant review, CSV ingest, and decision audit trails.</strong>
+  <strong>An enterprise-grade fintech credit intelligence workspace for loan default risk monitoring, deterministic DTI & repayment scoring, Groq AI decision support, CSV batch underwriting, and auditable decision logging.</strong>
 </p>
 
 <p align="center">
@@ -13,11 +13,30 @@
   <img alt="Tailwind CSS" src="https://img.shields.io/badge/Tailwind-CSS-38BDF8?logo=tailwindcss" />
 </p>
 
-## Overview
+---
 
-CrediShield is a full-stack bank loan default risk and credit intelligence platform built with the Next.js App Router. It ingests applicant profiles, computes and stores default-risk scores, ranks borrowers for officer review, visualizes portfolio exposure, generates cached Groq-powered credit explanations, and preserves every approval workflow action in an auditable decision log.
+## What is CrediShield?
 
-The project is designed for portfolio review, AI/ML evaluation, hackathon judging, and recruiter screening. The backend focuses on deterministic risk scoring and durable storage; the frontend presents the workflow like a polished fintech product.
+CrediShield is a production-ready, full-stack bank loan default risk and credit intelligence platform built using Next.js 14, TypeScript, Prisma, Neon PostgreSQL, and Groq AI (LLaMA 3.3).
+
+It bridges the gap between **deterministic mathematical risk scoring** (formulaic DTI and credit history calculations) and **generative AI decision support** (plain-language credit officer memos).
+
+---
+
+## Problem & Solution
+
+### The Problem
+Traditional commercial banking and loan underwriting operations face three core operational challenges:
+1. **Manual & Fragmented Underwriting:** Credit officers spend hours aggregating DTI ratios, repayment histories, and branch exposure data manually.
+2. **Opaque Black-Box Models:** Many modern ML scoring engines lack explainability, making compliance audits and officer reviews difficult.
+3. **Lack of Auditability:** Loan decisions are often stored informally across emails or spreadsheets without durable audit trails.
+
+### The Solution: CrediShield
+CrediShield addresses all three challenges with a unified workflow:
+- **Deterministic Server-Side Risk Scoring Engine:** Implements a transparent, reproducible scoring formula based on Debt-to-Income (DTI) ratio and historical repayment behavior.
+- **Groq LLaMA 3.3 Credit Intelligence:** Generates structured decision-support memos that translate raw financial metrics into actionable credit officer recommendations, cached directly in PostgreSQL.
+- **3-State Portfolio Concentration Alert System:** Continuously tracks high-risk loan exposure against configurable operational thresholds (`HIGH_RISK_THRESHOLD_PERCENT`).
+- **Full Officer Audit Log:** Records every approval, rejection, or investigation action with timestamps, officer names, and rationale comments.
 
 ## Screenshots
 
