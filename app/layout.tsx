@@ -3,8 +3,16 @@ import "./globals.css";
 import { Nav } from "@/components/Nav";
 
 export const metadata: Metadata = {
-  title: "CrediShield",
-  description: "AI-powered platform for intelligent bank loan default risk assessment, portfolio analytics, AI credit explanations, and credit decision management."
+  title: {
+    default: "CrediShield — AI Loan Default Risk & Credit Intelligence Platform",
+    template: "%s | CrediShield"
+  },
+  description: "Bank loan default risk platform combining deterministic DTI scoring, Groq AI credit intelligence memos, portfolio risk alerts, and auditable officer decision logging.",
+  openGraph: {
+    title: "CrediShield — AI Loan Default Risk Platform",
+    description: "Enterprise credit intelligence platform with deterministic risk formula, Groq explanations, and full officer audit logs.",
+    type: "website"
+  }
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

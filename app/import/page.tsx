@@ -20,6 +20,12 @@ export default function ImportPage() {
     setMessage("");
     setFileName(file.name);
 
+    if (!file.name.endsWith(".csv") && file.type !== "text/csv") {
+      setError("Please select a valid .csv file.");
+      setRows([]);
+      return;
+    }
+
     Papa.parse<Record<string, string>>(file, {
       header: true,
       skipEmptyLines: true,
@@ -27,15 +33,47 @@ export default function ImportPage() {
         const fields = result.meta.fields ?? [];
         const missing = requiredColumns.filter((column) => !fields.includes(column));
         if (missing.length) {
-          setError(`Missing required columns: ${missing.join(", ")}`);
+          setError(`Missing required CSV columns: ${missing.join(", ")}`);
           setRows([]);
           return;
         }
-        if (result.errors.length) {
-          setError(result.errors.map((item) => item.message).join("; "));
+
+        if (!result.data.length) {
+          setError("The selected CSV file contains no records.");
           setRows([]);
           return;
         }
+
+        const invalidRows: string[] = [];
+        result.data.forEach((row, index) => {
+          const rowNum = index + 1;
+          const income = Number(row.annualIncome);
+          const debt = Number(row.existingMonthlyDebt);
+          const score = Number(row.repaymentScore);
+          const loan = Number(row.loanAmount);
+          const tenure = Number(row.tenureMonths);
+
+          if ([income, debt, score, loan, tenure].some((val) => Number.isNaN(val))) {
+            invalidRows.push(`Row ${rowNum}: Contains non-numeric values for financial fields.`);
+          } else if (income <= 0) {
+            invalidRows.push(`Row ${rowNum}: annualIncome must be greater than 0.`);
+          } else if (debt < 0) {
+            invalidRows.push(`Row ${rowNum}: existingMonthlyDebt cannot be negative.`);
+          } else if (score < 0 || score > 100) {
+            invalidRows.push(`Row ${rowNum}: repaymentScore must be between 0 and 100.`);
+          } else if (loan <= 0) {
+            invalidRows.push(`Row ${rowNum}: loanAmount must be greater than 0.`);
+          } else if (tenure <= 0) {
+            invalidRows.push(`Row ${rowNum}: tenureMonths must be greater than 0.`);
+          }
+        });
+
+        if (invalidRows.length) {
+          setError(`Validation failed in CSV file:\n${invalidRows.slice(0, 5).join("\n")}${invalidRows.length > 5 ? `\n...and ${invalidRows.length - 5} more issues.` : ""}`);
+          setRows([]);
+          return;
+        }
+
         setRows(result.data);
       }
     });

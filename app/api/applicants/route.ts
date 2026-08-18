@@ -74,12 +74,19 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   try {
-    const body = await request.json();
-    const rows = Array.isArray(body) ? body : [body];
-    if (!rows.length) {
-      return jsonError("At least one applicant row is required.", 400);
+    let body: unknown;
+    try {
+      body = await request.json();
+    } catch {
+      return jsonError("Invalid JSON body payload.", 400);
     }
-    const data = rows.map(parseApplicant);
+
+    const rows = Array.isArray(body) ? body : [body];
+    if (!rows.length || (rows.length === 1 && (!rows[0] || typeof rows[0] !== "object"))) {
+      return jsonError("At least one valid applicant record is required.", 400);
+    }
+
+    const data = rows.map((row) => parseApplicant(row as Record<string, unknown>));
     if (data.length === 1) {
       const applicant = await prisma.applicant.create({ data: data[0] });
       return NextResponse.json(applicant, { status: 201 });

@@ -32,7 +32,7 @@ export function Nav() {
               <Link
                 key={link.href}
                 href={link.href}
-                className={`inline-flex items-center gap-2 rounded-full border-2 border-ledger-line px-3.5 py-2 text-sm font-extrabold transition hover:-translate-y-0.5 hover:bg-ledger-yellow ${
+                className={`inline-flex items-center gap-2 rounded-full border-2 border-ledger-line px-3.5 py-2 text-sm font-extrabold transition focus:outline-none focus:ring-2 focus:ring-ledger-ink focus:ring-offset-2 hover:-translate-y-0.5 hover:bg-ledger-yellow ${
                   active ? "bg-ledger-ink text-white shadow-[3px_3px_0_rgba(17,17,17,0.18)]" : "bg-white text-ledger-ink"
                 }`}
               >

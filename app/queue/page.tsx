@@ -82,33 +82,63 @@ export default function QueuePage() {
       {loading ? <LoadingState label="Refreshing queue" /> : null}
 
       {!loading && !visibleApplicants.length ? (
-        <section className="ledger-card p-8 text-center">
-          <p className="font-display text-4xl font-bold">No matching records</p>
-          <p className="mt-2 font-semibold text-ledger-ink/60">Adjust filters or clear search to widen the queue.</p>
+        <section className="ledger-card p-8 sm:p-12 text-center">
+          <div className="mx-auto grid h-16 w-16 place-items-center rounded-3xl border-2 border-ledger-line bg-ledger-yellow shadow-[4px_4px_0_rgba(17,17,17,0.18)]">
+            <svg className="h-8 w-8 text-ledger-ink" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <circle cx="11" cy="11" r="8" />
+              <path d="m21 21-4.3-4.3" />
+            </svg>
+          </div>
+          <h2 className="mt-5 font-display text-4xl font-bold">No matching applicants found</h2>
+          <p className="mt-2 font-semibold text-ledger-ink/65">Try adjusting your tier, category, branch filters or clear the search term.</p>
+          <button
+            className="btn-secondary mt-6"
+            onClick={() => {
+              setSearch("");
+              setFilters({ tier: "", category: "", branch: "", sort: "desc" });
+            }}
+          >
+            Reset all filters
+          </button>
         </section>
       ) : null}
 
       {!loading && visibleApplicants.length ? (
         <section className="grid gap-4">
-          {visibleApplicants.map((applicant, index) => (
-            <Link key={applicant.id} href={`/applicants/${applicant.id}`} className="ledger-card lift grid gap-4 p-5 md:grid-cols-[1.2fr_1fr_1fr_1fr_0.85fr] md:items-center" style={{ animationDelay: `${Math.min(index, 8) * 35}ms` }}>
-              <div>
-                <p className="font-mono text-xs font-bold uppercase text-ledger-ink/50">Applicant {applicant.id.slice(-8)}</p>
-                <h2 className="mt-1 font-display text-3xl font-bold leading-none">{applicant.branch}</h2>
-                <p className="mt-2 text-sm font-bold text-ledger-ink/58">{applicant.category} loan</p>
-              </div>
-              <Metric label="Requested" value={`INR ${currency.format(applicant.loanAmount)}`} />
-              <Metric label="Annual income" value={`INR ${currency.format(applicant.annualIncome)}`} />
-              <div>
-                <p className="eyebrow mb-2 text-ledger-ink/55">Risk score</p>
-                <RiskGauge score={applicant.riskScore} />
-              </div>
-              <div className="flex flex-wrap items-center gap-2 md:justify-end">
-                <RiskBadge tier={applicant.riskTier} />
-                {applicant.decisions[0] ? <StatusBadge status={applicant.decisions[0].status} /> : <span className="rounded-full border-2 border-ledger-line bg-white px-3 py-1 font-mono text-xs font-bold">Pending</span>}
-              </div>
-            </Link>
-          ))}
+          {visibleApplicants.map((applicant, index) => {
+            const lastDecision = applicant.decisions[0]?.status;
+            return (
+              <Link
+                key={applicant.id}
+                href={`/applicants/${applicant.id}`}
+                className="ledger-card lift grid gap-4 p-5 md:grid-cols-[1.2fr_1fr_1fr_1fr_0.9fr] md:items-center"
+                style={{ animationDelay: `${Math.min(index, 8) * 35}ms` }}
+              >
+                <div>
+                  <div className="flex items-center gap-2">
+                    <span className="font-mono text-xs font-bold uppercase text-ledger-ink/50">ID: {applicant.id.slice(-8)}</span>
+                    <span className="rounded-md border border-ledger-line/30 bg-ledger-soft px-2 py-0.5 font-mono text-[10px] font-bold uppercase text-ledger-ink/70">{applicant.category}</span>
+                  </div>
+                  <h2 className="mt-1 font-display text-3xl font-bold leading-none">{applicant.branch} Branch</h2>
+                  <p className="mt-2 text-xs font-bold text-ledger-ink/60">Underwriting queue item</p>
+                </div>
+                <Metric label="Loan requested" value={`INR ${currency.format(applicant.loanAmount)}`} />
+                <Metric label="Annual income" value={`INR ${currency.format(applicant.annualIncome)}`} />
+                <div>
+                  <p className="eyebrow mb-1 text-ledger-ink/55">Formulaic risk score</p>
+                  <RiskGauge score={applicant.riskScore} />
+                </div>
+                <div className="flex flex-wrap items-center gap-2 md:flex-col md:items-end md:justify-center">
+                  <RiskBadge tier={applicant.riskTier} />
+                  {lastDecision ? (
+                    <StatusBadge status={lastDecision} />
+                  ) : (
+                    <span className="inline-flex items-center rounded-full border-2 border-ledger-line/40 bg-white px-3 py-1 font-mono text-xs font-bold text-ledger-ink/70">Pending Review</span>
+                  )}
+                </div>
+              </Link>
+            );
+          })}
         </section>
       ) : null}
     </div>
